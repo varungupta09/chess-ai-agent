@@ -1,5 +1,5 @@
 import { useCallback, useMemo, useState } from 'react'
-import type { Board, Coord, PieceColor } from '../types/chess'
+import type { Board, CastlingRights, Coord, PieceColor } from '../types/chess'
 import { getLegalMoves } from '../types/chess'
 import './ChessBoard.css'
 
@@ -11,25 +11,31 @@ const PIECE_SYMBOLS: Record<string, string> = {
 interface ChessBoardProps {
   board: Board
   turn: PieceColor
+  castlingRights?: CastlingRights
   lastMove?: { from: Coord; to: Coord } | null
+  aiFlash?: { from: Coord; to: Coord } | null
   onMove?: (from: Coord, to: Coord) => void
   disabled?: boolean
+  checkedColor?: PieceColor | null
 }
 
 export default function ChessBoard({
   board,
   turn,
+  castlingRights,
   lastMove = null,
+  aiFlash = null,
   onMove,
   disabled = false,
+  checkedColor = null,
 }: ChessBoardProps) {
   const [selected, setSelected] = useState<Coord | null>(null)
 
   const legalMoves = useMemo(() => {
     if (!selected) return new Set<string>()
-    const moves = getLegalMoves(board, selected, turn)
+    const moves = getLegalMoves(board, selected, turn, castlingRights)
     return new Set(moves.map(([r, c]) => `${r}-${c}`))
-  }, [board, selected, turn])
+  }, [board, castlingRights, selected, turn])
 
   const handleSquareClick = useCallback(
     (row: number, col: number) => {
@@ -76,6 +82,15 @@ export default function ChessBoard({
               selected[1] === colIndex
             const isLegal = legalMoves.has(`${rowIndex}-${colIndex}`)
             const isLast = isLastMoveSquare(rowIndex, colIndex)
+            const isAiFlash = aiFlash
+              ? (aiFlash.from[0] === rowIndex && aiFlash.from[1] === colIndex) ||
+                (aiFlash.to[0] === rowIndex && aiFlash.to[1] === colIndex)
+              : false
+            const isCheckedKing =
+              checkedColor !== null &&
+              piece &&
+              piece.color === checkedColor &&
+              piece.kind === 'K'
 
             return (
               <button
@@ -87,6 +102,8 @@ export default function ChessBoard({
                   isSelected && 'square--selected',
                   isLegal && 'square--legal',
                   isLast && 'square--last',
+                  isAiFlash && 'square--ai-flash',
+                  isCheckedKing && 'square--check',
                 ]
                   .filter(Boolean)
                   .join(' ')}
