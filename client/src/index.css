@@ -1,0 +1,29 @@
+:root {
+  --bg-deep: #06060a;
+  --cyan: #00f5ff;
+  --cyan-dim: rgba(0, 245, 255, 0.5);
+  --magenta: #ff00aa;
+  --magenta-dim: rgba(255, 0, 170, 0.4);
+  --white: #f5f5f7;
+  --gray: #86868b;
+  --font-display: 'Orbitron', sans-serif;
+  --font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-body);
+  background: var(--bg-deep);
+  color: var(--white);
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+
+#root {
+  min-height: 100vh;
+}

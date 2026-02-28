@@ -1,0 +1,174 @@
+/* Chess board — futuristic / arcade */
+
+.chess-board-wrap {
+  position: relative;
+  display: inline-block;
+  padding: 1.5rem;
+}
+
+.chess-board-glow {
+  position: absolute;
+  inset: -20%;
+  background: radial-gradient(
+    ellipse 80% 80% at 50% 50%,
+    rgba(0, 245, 255, 0.12) 0%,
+    rgba(255, 0, 170, 0.04) 40%,
+    transparent 70%
+  );
+  pointer-events: none;
+  border-radius: 24px;
+}
+
+.chess-board {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  grid-template-rows: repeat(8, 1fr);
+  width: min( min(90vmin, 520px), 80vw );
+  aspect-ratio: 1;
+  border: 2px solid rgba(0, 245, 255, 0.35);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.04),
+    0 0 0 1px rgba(0, 0, 0, 0.3),
+    0 0 40px rgba(0, 245, 255, 0.15),
+    0 0 80px rgba(0, 245, 255, 0.06);
+}
+
+.square {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(18, 18, 24, 0.95);
+  transition:
+    background 0.15s ease,
+    box-shadow 0.2s ease,
+    transform 0.15s ease;
+  font-family: Georgia, 'Times New Roman', serif;
+}
+
+.square:focus {
+  outline: none;
+}
+
+.square:focus-visible {
+  box-shadow: inset 0 0 0 2px var(--cyan);
+}
+
+.square--light {
+  background: rgba(30, 32, 42, 0.98);
+}
+
+.square--dark {
+  background: rgba(12, 14, 22, 0.98);
+}
+
+.square:hover:not(.square--selected) {
+  background: rgba(40, 45, 60, 0.98);
+}
+
+.square--light:hover:not(.square--selected) {
+  background: rgba(35, 38, 52, 0.98);
+}
+
+.square--selected {
+  background: rgba(0, 245, 255, 0.2) !important;
+  box-shadow: inset 0 0 0 2px var(--cyan), 0 0 20px rgba(0, 245, 255, 0.25);
+}
+
+.square--legal {
+  position: relative;
+}
+
+.square-dot {
+  position: absolute;
+  width: 22%;
+  height: 22%;
+  border-radius: 50%;
+  background: rgba(0, 245, 255, 0.55);
+  box-shadow: 0 0 10px var(--cyan-dim);
+}
+
+.square-capture {
+  position: absolute;
+  inset: 8%;
+  border: 3px solid rgba(0, 245, 255, 0.6);
+  border-radius: 4px;
+  box-shadow: 0 0 12px var(--cyan-dim);
+}
+
+.square--last {
+  box-shadow: inset 0 0 0 2px rgba(255, 0, 170, 0.5);
+  background: rgba(255, 0, 170, 0.08) !important;
+}
+
+.square--last.square--light {
+  background: rgba(255, 0, 170, 0.1) !important;
+}
+
+/* Coordinates */
+.square-coord {
+  position: absolute;
+  font-family: var(--font-display);
+  font-size: clamp(8px, 1.8vw, 11px);
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  color: rgba(255, 255, 255, 0.35);
+}
+
+.square-coord--file {
+  top: 3px;
+  left: 4px;
+}
+
+.square-coord--rank {
+  bottom: 3px;
+  right: 4px;
+}
+
+.square--light .square-coord {
+  color: rgba(255, 255, 255, 0.45);
+}
+
+/* Pieces */
+.piece {
+  position: relative;
+  z-index: 2;
+  font-size: clamp(28px, 6.5vw, 48px);
+  line-height: 1;
+  user-select: none;
+  pointer-events: none;
+  text-shadow: 0 0 20px rgba(255, 255, 255, 0.15);
+  transition: transform 0.12s ease;
+}
+
+.square:hover .piece,
+.square:focus .piece {
+  transform: scale(1.06);
+}
+
+.piece--w {
+  color: #f0f0f5;
+  filter: drop-shadow(0 1px 2px rgba(0,0,0,0.4));
+}
+
+.piece--b {
+  color: #1a1a22;
+  filter: drop-shadow(0 0 8px rgba(0, 245, 255, 0.25)) drop-shadow(0 1px 2px rgba(0,0,0,0.5));
+}
+
+.square--selected .piece--w {
+  color: #fff;
+  filter: drop-shadow(0 0 12px rgba(255,255,255,0.4));
+}
+
+.square--selected .piece--b {
+  color: #0a0a12;
+  filter: drop-shadow(0 0 14px var(--cyan)) drop-shadow(0 0 24px var(--cyan-dim));
+}
